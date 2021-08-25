@@ -1,0 +1,9 @@
+app:
+ name: sample-nodejs-app-demo
+
+versions:
+ - name: sample-nodejs-app-v1
+   image:
+     repository: docker.io/chetankorat/sample-nodejs-app
+     tag: v1
+replicaCount: 1
