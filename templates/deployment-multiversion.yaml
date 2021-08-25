@@ -9,7 +9,7 @@ metadata:
    version: {{ .name }}
    release: {{ $.Release.Name }}   
 spec:
- replicas: {{ $.Values.replicaCount }}
+ replicas: {{ .image.replicaCount }}
  selector:
    matchLabels:
        app: {{ $.Values.app.name }}
