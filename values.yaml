@@ -10,5 +10,5 @@ versions:
  - name: sample-nodejs-app-v2
    image:
      repository: docker.io/chetankorat/sample-nodejs-app
-     tag: v2
+     tag: v2.1
      replicaCount: 2
