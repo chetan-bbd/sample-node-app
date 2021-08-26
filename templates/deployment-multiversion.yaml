@@ -54,7 +54,8 @@ metadata:
 spec:
   rules:
 {{- range .Values.versions }}  
-  - http:
+  - host: "foo.bar.com"
+    http:
       paths:
       - path: {{.image.prefix}}
         pathType: Prefix
