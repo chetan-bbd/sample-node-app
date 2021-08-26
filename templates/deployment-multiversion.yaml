@@ -5,22 +5,16 @@ kind: Deployment
 metadata:
  name: svc-{{ .name }}
  labels:
-   app: {{ $.Values.app.name }}
-   version: {{ .name }}
-   release: {{ $.Release.Name }}   
+   app: {{ .name }}
 spec:
  replicas: {{ .image.replicaCount }}
  selector:
    matchLabels:
-       app: {{ $.Values.app.name }}
-       version: {{ .name }}
-       release: {{ $.Release.Name }}
+       app: {{ .name }}
  template:
    metadata:
      labels:
-       app: {{ $.Values.app.name }}
-       version: {{ .name }}
-       release: {{ $.Release.Name }}
+       app: {{ .name }}
    spec:
      containers:
        - name: name
@@ -30,4 +24,17 @@ spec:
            - name: http
              containerPort: 80
              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sv-{{ .name }}
+  labels:
+    app: {{ .name }}
+spec:
+  ports:
+    - port: 3000
+      name: http
+  selector:
+    app: {{ .name }}             
 {{ end }}
