@@ -7,8 +7,10 @@ versions:
      repository: docker.io/chetankorat/sample-nodejs-app
      tag: v1.2
      replicaCount: 1
+     prefix: "/v1"
  - name: sample-nodejs-app-v2
    image:
      repository: docker.io/chetankorat/sample-nodejs-app
      tag: v2.2
      replicaCount: 2
+     prefix: "/v2"

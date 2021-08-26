@@ -5,16 +5,22 @@ kind: Deployment
 metadata:
  name: svc-{{ .name }}
  labels:
-   app: {{ .name }}
+   app: {{ $.Values.app.name }}
+   version: {{ .name }}
+   release: {{ $.Release.Name }}   
 spec:
  replicas: {{ .image.replicaCount }}
  selector:
    matchLabels:
-       app: {{ .name }}
+       app: {{ $.Values.app.name }}
+       version: {{ .name }}
+       release: {{ $.Release.Name }}
  template:
    metadata:
      labels:
-       app: {{ .name }}
+       app: {{ $.Values.app.name }}
+       version: {{ .name }}
+       release: {{ $.Release.Name }}
    spec:
      containers:
        - name: name
@@ -25,16 +31,21 @@ spec:
              containerPort: 80
              protocol: TCP
 ---
-apiVersion: v1
-kind: Service
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
 metadata:
-  name: sv-{{ .name }}
-  labels:
-    app: {{ .name }}
+ name: routerule-{{ .name }}
+ labels:
+   app: {{ $.Values.app.name }}
+   release: {{ $.Release.Name }} 
 spec:
-  ports:
-    - port: 3000
-      name: http
-  selector:
-    app: {{ .name }}             
+ destination:
+   name: {{ $.Values.app.name }}-clusterIP
+ match:
+   uri:
+     prefix: "{{ .image.prefix }}"
+ precedence: 2
+ route:
+ - labels:
+     version: {{ .name }}
 {{ end }}
