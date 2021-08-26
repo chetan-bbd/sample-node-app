@@ -31,21 +31,36 @@ spec:
              containerPort: 80
              protocol: TCP
 ---
-apiVersion: config.istio.io/v1alpha2
-kind: RouteRule
+apiVersion: v1
+kind: Service
 metadata:
- name: routerule-{{ .name }}
- labels:
-   app: {{ $.Values.app.name }}
-   release: {{ $.Release.Name }} 
+  name: sv-{{ .name }}
+  labels:
+    app: {{ $.Values.app.name }}
 spec:
- destination:
-   name: {{ $.Values.app.name }}-clusterIP
- match:
-   uri:
-     prefix: "{{ .image.prefix }}"
- precedence: 2
- route:
- - labels:
-     version: {{ .name }}
+  ports:
+    - port: 3000
+      name: http
+  selector:
+    app: {{ $.Values.app.name }}             
 {{ end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+{{- range .Values.versions }}  
+  - http:
+      paths:
+      - path: {{.image.prefix}}
+        pathType: Prefix
+        backend:
+          service:
+            name: sv-{{ .name }}
+            port:
+              number: 3000
+{{ end }}              
