@@ -64,3 +64,44 @@ spec:
             port:
               number: 3000
 {{ end }}              
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: fe-dummy
+ labels:
+   app: fe-dummy   
+spec:
+ replicas: 1
+ selector:
+   matchLabels:
+       app: fe-dummy
+ template:
+   metadata:
+     labels:
+       app: fe-dummy
+   spec:
+     containers:
+       - name: fe-dummy-container
+         image: "docker.io/chetankorat/sample-nodejs-app:v3"
+         imagePullPolicy: IfNotPresent
+         ports:
+           - name: http
+             containerPort: 80
+             protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sv-fe-dummy
+  labels:
+    app: fe-dummy
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 3000
+      targetPort: 3000
+      name: http
+  selector:
+    app: fe-dummy             
