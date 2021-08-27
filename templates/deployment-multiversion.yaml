@@ -54,7 +54,7 @@ metadata:
 spec:
   rules:
 {{- range .Values.versions }}  
-  - host: "sample-service"
+  - host: "my-simple-ingress"
     http:
       paths:
       - path: {{.image.prefix}}
